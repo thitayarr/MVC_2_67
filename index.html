@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตรวจสอบชุดซุปเปอร์ฮีโร่</title>
+</head>
+<body>
+    <h1>ตรวจสอบชุดซุปเปอร์ฮีโร่</h1>
+    <form id="suitForm" onsubmit="event.preventDefault(); handleFormSubmit();">
+        <label for="suitCode">รหัสชุด:</label><br>
+        <input type="text" id="suitCode" name="suitCode" pattern="^[1-9][0-9]{5}$" title="enter code 6 digit and first digit not 0" required><br>
+        <small>enter code 6 digit and first digit not 0</small><br><br>
+
+        <button type="submit">ตรวจสอบ</button>
+    </form>
+
+    <p id="error" style="color: red;"></p>
+
+    <script src="controller.js" type="module"></script>
+</body>
+</html>
