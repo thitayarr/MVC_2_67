@@ -7,13 +7,15 @@
 </head>
 <body>
     <h1>ชุดปกปิดตัวตน</h1>
-    <label for="suitId">ใส่รหัสชุด:</label>
-    <input type="text" id="suitId">
+    <label for="suitId">ใส่รหัสชุด:</label><br>
+    <input type="text" id="suitId" name="suitId" pattern="^[1-9][0-9]{5}$" title="enter code 6 digit and first digit not 0" required>
     <button id="checkButton">ตรวจสอบ</button>
     <p id="suitInfo"></p>
     <button id="repairButton" style="display:none;">ซ่อมแซมชุด (+25 durability)</button>
     <p id="repairMessage" style="color: green;"></p>
     <button id="backButton">Back</button>
+
+    <div id="repairCountDisplay"></div>
 
     <script src="concealment_suit.js" type="module"></script>
     <script src="controller.js" type="module"></script>

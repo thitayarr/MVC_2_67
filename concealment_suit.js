@@ -3,8 +3,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const repairButton = document.getElementById("repairButton");
     const suitInfo = document.getElementById("suitInfo");
     const repairMessage = document.getElementById("repairMessage");
+    const repairCountDisplay = document.getElementById("repairCountDisplay");
 
     let suits = [];  // ประกาศตัวแปร suits เพื่อเก็บข้อมูลชุด
+    let repairCounts = {  // ตัวแปรสำหรับเก็บจำนวนชุดที่ซ่อมแซมในแต่ละประเภท
+        "ชุดปกปิดตัวตน": 0,
+
+    };
 
     async function loadSuits() {
         const response = await fetch("suits.csv");
@@ -48,20 +53,34 @@ document.addEventListener("DOMContentLoaded", () => {
         const suitId = document.getElementById("suitId").value;
         const suit = suits.find(s => s.id === suitId);
 
-        if (suit && suit.type === "ชุดชุดปกปิดตัวตน") {
+        if (suit && suit.type === "ชุดปกปิดตัวตน") {
             // ถ้าความทนทานลงท้ายด้วยเลข 3 หรือ 7 บวก 25
             if (suit.durability % 10 === 3 || suit.durability % 10 === 7) {
-                suit.durability = Math.min(suit.durability + 25, 100);
-                suitInfo.textContent = `รหัสชุด: ${suit.id}, ประเภท: ${suit.type}, ความทนทาน: ${suit.durability}`;
-                repairMessage.textContent = "ซ่อมแซมชุดสำเร็จ!";
-            } else {
-                // ถ้าความทนทานไม่ลงท้ายด้วย 3 หรือ 7 แสดงข้อความซ่อมแซมสำเร็จ
-                suitInfo.textContent = `รหัสชุด: ${suit.id}, ประเภท: ${suit.type}, ความทนทาน: ${suit.durability}`;
-                repairMessage.textContent = "ซ่อมแซมชุดสำเร็จ!";
+                suit.durability = Math.min(suit.durability + 25, 100);  // บวกได้สูงสุดไม่เกิน 100
             }
-            
-            // ซ่อนปุ่มซ่อม
-            repairButton.style.display = "none";
+
+            suitInfo.textContent = `รหัสชุด: ${suit.id}, ประเภท: ${suit.type}, ความทนทาน: ${suit.durability}`;
+
+            // ถ้าความทนทานถึง 70 หรือมากกว่า หรือไม่ลงท้ายด้วย 3 หรือ 7
+            if (suit.durability % 10 !== 3 && suit.durability % 10 !== 7) {
+                repairMessage.textContent = "ซ่อมแซมชุดสำเร็จ!";
+                repairButton.style.display = "none";  // ซ่อนปุ่มซ่อมแซม
+
+                // เพิ่มจำนวนชุดที่ซ่อมแซมในประเภทนี้
+                repairCounts[suit.type] = (repairCounts[suit.type] || 0) + 1;
+                updateRepairCountDisplay();
+            } else {
+                repairButton.style.display = "block";  // แสดงปุ่มซ่อมถ้าความทนทานยังลงท้ายด้วย 3 หรือ 7
+            }
         }
     });
+
+    function updateRepairCountDisplay() {
+        repairCountDisplay.textContent = `จำนวนชุดที่ซ่อมแซม:\n`;
+        for (const type in repairCounts) {
+            if (repairCounts[type] > 0) {
+                repairCountDisplay.textContent += `${type}: ${repairCounts[type]} ชุด\n`;
+            }
+        }
+    }
 });
